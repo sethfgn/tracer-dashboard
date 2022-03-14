@@ -1,20 +1,62 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
+    "isolatedModules": true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": false,
     "skipLibCheck": true,
+    "strictNullChecks": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
-    "esModuleInterop": true,
+    "noEmitOnError": true,
     "module": "esnext",
     "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "resolveJsonModule": true,
-    "isolatedModules": true,
+    "esModuleInterop": true,
+    "importHelpers": true,
+    "removeComments": true,
     "jsx": "preserve",
-    "incremental": true
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": [
+        "components/*"
+      ],
+      "@types/*": [
+        "types/*"
+      ],
+      "@context/*": [
+        "context/*"
+      ],
+      "@hooks/*": [
+        "hooks/*"
+      ],
+      "@libs/*": [
+        "libs/*"
+      ],
+      "@archetypes/*": [
+        "archetypes/*"
+      ],
+      "@public/*": [
+        "public/*"
+      ]
+    },
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "next-env.d.ts",
+    "next.config.js",
+    "node_modules/@tracer-protocol/perpetual-pools-contracts"
+  ],
+  "exclude": [
+    "public/static/*"
+  ]
 }
