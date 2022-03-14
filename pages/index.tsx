@@ -14,7 +14,7 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Hi Seth
+          This is a suggestion for a new change in the code base!!
         </h1>
 
         <p className={styles.description}>
