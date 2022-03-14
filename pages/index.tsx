@@ -1,6 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import { Chart } from '../components/Chart'
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
@@ -16,6 +17,8 @@ const Home: NextPage = () => {
         <h1 className={styles.title}>
           Hi Seth
         </h1>
+        
+        <Chart title='hi'>Hello</Chart>
 
         <p className={styles.description}>
           Get started by editing{' '}
