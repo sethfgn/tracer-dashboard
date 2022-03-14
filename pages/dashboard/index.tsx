@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react';
 import NavBar from '@components/Nav/Navbar';
 import Footer from '@components/Footer';
-import Portfolio, { TradePortfolioPage } from '@archetypes/Portfolio';
+//import Portfolio, { TradePortfolioPage } from '@archetypes/Portfolio';
 import { PoolStore } from '@context/PoolContext';
 import { SwapStore } from '@context/SwapContext';
 import { useRouter } from 'next/router';
 import PendingCommits from '@components/PendingCommits';
 import UnsupportedNetworkPopup from '@components/General/UnsupportedNetworkPopup';
 import { WarningBanners } from '@components/WarningBanner';
+//import Container from '@components/General/Container';
+import Dashboard from '@archetypes/Dashboard';
 
 export default (() => {
     const router = useRouter();
@@ -22,7 +24,7 @@ export default (() => {
                 <NavBar />
                 <WarningBanners banners={['auditWarning', 'decayWarning']} />
                 <SwapStore>
-                    <Portfolio page={TradePortfolioPage.Overview} />
+                    <Dashboard />
                 </SwapStore>
                 <PendingCommits />
                 <UnsupportedNetworkPopup />
