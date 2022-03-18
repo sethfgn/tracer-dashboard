@@ -8,7 +8,7 @@ export type TvlDataPoint = {
 };
 
 export type TvlSeries = {
-    [ethAddress: string]: TvlDataPoint[];
+    [market: string]: TvlDataPoint[];
 };
 
 export const fetchTvlSeries: () => Promise<TvlSeries> = async () => {
