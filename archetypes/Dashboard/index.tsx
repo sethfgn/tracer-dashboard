@@ -78,9 +78,14 @@ export default (() => {
                             </>
                         ))}
                 </div>
-                <div className="flex flex-row mt-10">
+                <div className="mt-10">
                     <div className="h-32 p-5 container mt-12">
                         <Container>
+                            <div className = "w-96 flex-col mb-5 ml-5">
+                                <GreyContainer>Hello JW</GreyContainer>
+                                <GreyContainer>Hello JW</GreyContainer>
+                                <GreyContainer>Hello JW</GreyContainer>
+                            </div>
                             <div className="p-24">Cumulative Volume Changes</div>
                             {lineData ? (
                                 <Chart
@@ -99,7 +104,6 @@ export default (() => {
                                 <div>Loading...</div>
                             )}
                         </Container>
-                        <GreyContainer>Hello JW</GreyContainer>
                     </div>
                 </div>
             </div>
