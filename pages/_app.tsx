@@ -14,11 +14,13 @@ import { UsersCommitStore } from '@context/UsersCommitContext';
 import { ThemeStore } from '@context/ThemeContext';
 import { ARBITRUM, ARBITRUM_RINKEBY, MAINNET } from '@libs/constants';
 import { networkConfig } from '@context/Web3Context/Web3Context.Config';
+import { ThemeProvider } from '@tracer-protocol/tracer-ui';
 
 const USERSNAP_GLOBAL_API_KEY = process.env.NEXT_PUBLIC_USERSNAP_GLOBAL_API_KEY;
 const USERSNAP_API_KEY = process.env.NEXT_PUBLIC_USERSNAP_API_KEY;
 
-const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
+const App = ({ Component, pageProps }: AppProps) => {
+    // eslint-disable-line
     useEffect(() => {
         // @ts-ignore
         window.onUsersnapCXLoad = function (api) {
@@ -61,39 +63,41 @@ const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
 
             <ToastProvider components={{ Toast: Notification }}>
                 <ThemeStore>
-                    <Web3Store
-                        onboardConfig={{
-                            hideBranding: true,
-                            walletSelect: {
-                                heading: 'Connect Wallet',
-                                wallets: [
-                                    { walletName: 'metamask' },
-                                    { walletName: 'coinbase' },
-                                    { walletName: 'torus' },
-                                    // { walletName: "binance" },
+                    <ThemeProvider>
+                        <Web3Store
+                            onboardConfig={{
+                                hideBranding: true,
+                                walletSelect: {
+                                    heading: 'Connect Wallet',
+                                    wallets: [
+                                        { walletName: 'metamask' },
+                                        { walletName: 'coinbase' },
+                                        { walletName: 'torus' },
+                                        // { walletName: "binance" },
 
-                                    {
-                                        walletName: 'walletConnect',
-                                        rpc: {
-                                            [ARBITRUM]: networkConfig[ARBITRUM].publicRPC,
-                                            [ARBITRUM_RINKEBY]: networkConfig[ARBITRUM_RINKEBY].publicRPC,
-                                            [MAINNET]: networkConfig[MAINNET].publicRPC,
+                                        {
+                                            walletName: 'walletConnect',
+                                            rpc: {
+                                                [ARBITRUM]: networkConfig[ARBITRUM].publicRPC,
+                                                [ARBITRUM_RINKEBY]: networkConfig[ARBITRUM_RINKEBY].publicRPC,
+                                                [MAINNET]: networkConfig[MAINNET].publicRPC,
+                                            },
                                         },
-                                    },
-                                ],
-                                // agreement: {
-                                //     version: '1.0',
-                                //     termsUrl: 'https://google.com',
-                                // },
-                            },
-                        }}
-                    >
-                        <TransactionStore>
-                            <UsersCommitStore>
-                                <Component {...pageProps} />
-                            </UsersCommitStore>
-                        </TransactionStore>
-                    </Web3Store>
+                                    ],
+                                    // agreement: {
+                                    //     version: '1.0',
+                                    //     termsUrl: 'https://google.com',
+                                    // },
+                                },
+                            }}
+                        >
+                            <TransactionStore>
+                                <UsersCommitStore>
+                                    <Component {...pageProps} />
+                                </UsersCommitStore>
+                            </TransactionStore>
+                        </Web3Store>
+                    </ThemeProvider>
                 </ThemeStore>
             </ToastProvider>
         </div>
