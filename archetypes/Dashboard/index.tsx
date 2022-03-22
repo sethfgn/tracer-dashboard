@@ -81,7 +81,7 @@ export default (() => {
                 <div className="mt-10">
                     <div className="h-32 p-5 container mt-12">
                         <Container>
-                            <div className = "w-96 flex-col mb-5 ml-5">
+                            <div className="w-96 flex-col mb-5 ml-5">
                                 <GreyContainer>Hello JW</GreyContainer>
                                 <GreyContainer>Hello JW</GreyContainer>
                                 <GreyContainer>Hello JW</GreyContainer>
