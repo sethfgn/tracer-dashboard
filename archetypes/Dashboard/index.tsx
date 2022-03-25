@@ -7,16 +7,27 @@ import { AxisOptions, Chart } from 'react-charts';
 import { Button, Card } from '@tracer-protocol/tracer-ui';
 //import { Dropdown } from '@components/General/Dropdown';
 import ChartCard from '../../components/ChartCard/index';
+import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
+import styled from 'styled-components';
+import Icon from '@ant-design/icons';
 
-//mt-12
-//"mt-5 flex overflow-x-auto whitespace-nowrap"
+const StyledIcon = styled(Icon)`
+    position: absolute;
+    margin: auto;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 32px;
+    height: 32px;
+`;
+
 export default (() => {
-    const [lineData, setLineData] = React.useState<TvlDataPoint[]>();
+    const [tvlData, setTvlData] = React.useState<TvlDataPoint[]>();
 
     async function getLineData() {
         const tvlSeries = await fetchTvlSeries();
-        const newLineData = tvlSeries[Object.keys(tvlSeries)[0]];
-        setLineData(newLineData.splice(0, 100));
+        const newTvlData = tvlSeries[Object.keys(tvlSeries)[0]];
+        setTvlData(newTvlData.splice(0, 100));
     }
 
     React.useEffect(() => {
@@ -65,7 +76,7 @@ export default (() => {
                 {['Total Value Locked', 'Total National Locked', 'All Time Value']
                     .map((e) => (
                         <div key={e} className="box lg:w-1/3">
-                            <ChartCard title={e} />
+                            <ChartCard title={e} data={tvlData} />
                         </div>
                     ))
                     .reduce((prev, curr) => (
@@ -77,7 +88,7 @@ export default (() => {
                     ))}
             </div>
             {/* Big dashboard */}
-            <Card>
+            <Card padding="sm">
                 <div className="flex">
                     <div className="pb-2 font-semibold">Cumulative Volume Changes</div>
                 </div>
@@ -107,13 +118,13 @@ export default (() => {
                         </GreyContainer>
                     </div>
                     <div className="flex-auto ml-5">
-                        {lineData ? (
+                        {tvlData ? (
                             <Chart
                                 options={{
                                     data: [
                                         {
-                                            label: 'React Charts',
-                                            data: lineData,
+                                            label: 'TVL',
+                                            data: tvlData,
                                         },
                                     ],
                                     primaryAxis,
@@ -121,7 +132,7 @@ export default (() => {
                                 }}
                             />
                         ) : (
-                            <div>Loading...</div>
+                            <StyledIcon component={TracerLoading} className="tracer-loading" />
                         )}
                     </div>
                 </div>
