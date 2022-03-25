@@ -20,35 +20,36 @@ export default function ChartCard(props: ChartCardProps) {
     return (
         <Card padding="sm">
             <div className="flex justify-between items-center">
-                <div className="">{props.title}</div>
-                <div className="">
-                    <Dropdown
-                        size="xs"
-                        placeHolder={currency}
-                        placeHolderIcon={currency}
-                        options={currencyOptions.map((c) => ({
-                            key: c,
-                            text: c,
-                            ticker: c,
-                        }))}
-                        onSelect={(option) => setCurrency(option as LogoTicker)}
-                        value={currency}
-                    />
-                </div>
-                <div className="">
-                    <Dropdown
-                        size="xs"
-                        placeHolder={timeFrame}
-                        options={timeFrameOptions.map((c) => ({
-                            key: c,
-                            text: c,
-                        }))}
-                        onSelect={(option) => setTimeFrame(option as TimeFrame)}
-                        value={timeFrame}
-                    />
+                <div className="mr-2">{props.title}</div>
+                <div className="flex justify-end">
+                    <div className="mr-5">
+                        <Dropdown
+                            size="xs"
+                            placeHolder={currency}
+                            placeHolderIcon={currency}
+                            options={currencyOptions.map((c) => ({
+                                key: c,
+                                text: c,
+                                ticker: c,
+                            }))}
+                            onSelect={(option) => setCurrency(option as LogoTicker)}
+                            value={currency}
+                        />
+                    </div>
+                    <div className="">
+                        <Dropdown
+                            size="sm"
+                            placeHolder={timeFrame}
+                            options={timeFrameOptions.map((c) => ({
+                                key: c,
+                                text: c,
+                            }))}
+                            onSelect={(option) => setTimeFrame(option as TimeFrame)}
+                            value={timeFrame}
+                        />
+                    </div>
                 </div>
             </div>
-
             <div className="p-24" />
         </Card>
     );

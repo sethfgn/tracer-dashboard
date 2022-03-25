@@ -5,7 +5,7 @@ import { fetchTvlSeries, TvlDataPoint } from '../../libs/utils/totalValueLockedA
 // import ChartWrapper from '@components/Charts';
 import { AxisOptions, Chart } from 'react-charts';
 import { Button, Card } from '@tracer-protocol/tracer-ui';
-import { Dropdown } from '@components/General/Dropdown';
+//import { Dropdown } from '@components/General/Dropdown';
 import ChartCard from '../../components/ChartCard/index';
 
 //mt-12
