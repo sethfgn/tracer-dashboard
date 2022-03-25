@@ -21,8 +21,8 @@ export default function ChartCard(props: ChartCardProps) {
         <Card padding="sm">
             <div className="flex justify-between items-center">
                 <div className="mr-2">{props.title}</div>
-                <div className="flex justify-end">
-                    <div className="mr-5">
+                <div className="flex justify-end items-center">
+                    <div className="w-28">
                         <Dropdown
                             size="xs"
                             placeHolder={currency}
@@ -36,9 +36,9 @@ export default function ChartCard(props: ChartCardProps) {
                             value={currency}
                         />
                     </div>
-                    <div className="">
+                    <div className="w-24">
                         <Dropdown
-                            size="sm"
+                            size="xs"
                             placeHolder={timeFrame}
                             options={timeFrameOptions.map((c) => ({
                                 key: c,

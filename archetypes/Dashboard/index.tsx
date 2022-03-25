@@ -61,10 +61,10 @@ export default (() => {
                 </div>
             </div>
             {/* Mini dashboards */}
-            <div className="flex mt-12 mb-10 flex-col md:flex-row">
+            <div className="flex mt-12 mb-10 flex-col lg:flex-row">
                 {['Total Value Locked', 'Total National Locked', 'All Time Value']
                     .map((e) => (
-                        <div key={e} className="box md:w-1/3">
+                        <div key={e} className="box lg:w-1/3">
                             <ChartCard title={e} />
                         </div>
                     ))
