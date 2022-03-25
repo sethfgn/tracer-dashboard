@@ -18,6 +18,7 @@ const timeFrameOptions: TimeFrame[] = ['Hourly', 'Daily', 'Weekly', 'Monthly', '
 interface ChartCardProps {
     title: string;
     data?: TvlDataPoint[];
+    transform?: (arg: number) => number;
 }
 
 const StyledIcon = styled(Icon)`
@@ -30,14 +31,61 @@ const StyledIcon = styled(Icon)`
     height: 32px;
 `;
 
+const usdFormatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+});
+
+const percentFormatter = Intl.NumberFormat('default', {
+    style: 'percent',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+});
+
+const timeIntervalDict: Record<TimeFrame, number> = {
+    Hourly: 3600,
+    Daily: 86400,
+    Weekly: 604800,
+    Monthly: 2592000,
+    '3 Months': 7776000,
+    Yearly: 31536000,
+    All: 0,
+};
+
 export default function ChartCard(props: ChartCardProps) {
     const [currency, setCurrency] = React.useState<LogoTicker>('USDC');
     const [timeFrame, setTimeFrame] = React.useState<TimeFrame>('Monthly');
 
+    const [startInd, setStartInd] = React.useState<number>();
+
+    const transform = React.useMemo(
+        () => (props.transform ? (num: number) => props.transform!(num) : (num: number) => num),
+        [props.transform],
+    );
+
+    React.useEffect(() => {
+        if (props.data) {
+            if (timeFrame === 'All') {
+                setStartInd(0);
+            } else {
+                const startUnixTime =
+                    Number(props.data[props!.data!.length - 1].time_stamp) - timeIntervalDict[timeFrame];
+                let ind = 0;
+
+                while (Number(props.data[ind].time_stamp) < startUnixTime) {
+                    ind++;
+                }
+
+                console.log('ind', ind);
+                setStartInd(ind);
+            }
+        }
+    }, [props.data, timeFrame]);
+
     const primaryAxis = React.useMemo(
         (): AxisOptions<TvlDataPoint> => ({
             getValue: (datum) => new Date(Number(datum.time_stamp)),
-            scaleType: 'time',
+            // scaleType: 'time',
             padBandRange: false,
             show: false,
             styles: { width: '50%' },
@@ -49,7 +97,7 @@ export default function ChartCard(props: ChartCardProps) {
     const secondaryAxes = React.useMemo(
         (): AxisOptions<TvlDataPoint>[] => [
             {
-                getValue: (datum) => datum.tvl,
+                getValue: (datum) => transform(datum.tvl),
                 elementType: 'area',
                 show: false,
                 shouldNice: false,
@@ -91,29 +139,56 @@ export default function ChartCard(props: ChartCardProps) {
                     </div>
                 </div>
             </div>
-            <div className="mt-3 mb-3 flex flex-row justify-between">
-                <div className="font-bold text-3xl">$400,102,402</div>
-                <div className="font-bold text-3xl text-green-600">4.13% ↑</div>
-            </div>
+            {props.data ? (
+                <>
+                    <div className="mt-3 mb-3 flex flex-row justify-between">
+                        <div className="font-bold text-3xl">
+                            {usdFormatter.format(transform(props.data?.[props.data?.length - 1]?.tvl))}
+                        </div>
+                        <div
+                            className={`font-bold text-3xl ${
+                                (transform(props.data[props.data?.length - 1]?.tvl) -
+                                    transform(props.data[startInd ?? 0]?.tvl)) /
+                                    transform(props.data[startInd ?? 0]?.tvl) >=
+                                0
+                                    ? 'text-green-600'
+                                    : 'text-red-600'
+                            }`}
+                        >
+                            {percentFormatter.format(
+                                (transform(props.data[props.data?.length - 1]?.tvl) -
+                                    transform(props.data[startInd ?? 0]?.tvl)) /
+                                    transform(props.data[startInd ?? 0]?.tvl),
+                            )}{' '}
+                            {(transform(props.data[props.data?.length - 1]?.tvl) -
+                                transform(props.data[startInd ?? 0]?.tvl)) /
+                                transform(props.data[startInd ?? 0]?.tvl) >=
+                            0
+                                ? '↑'
+                                : '↓'}
+                        </div>
+                    </div>
 
-            <div className="h-56">
-                {props.data ? (
-                    <Chart
-                        options={{
-                            data: [
-                                {
-                                    label: 'TVL',
-                                    data: props.data,
-                                },
-                            ],
-                            primaryAxis,
-                            secondaryAxes,
-                        }}
-                    />
-                ) : (
+                    <div className="h-56">
+                        <Chart
+                            options={{
+                                data: [
+                                    {
+                                        label: props.title,
+                                        data: props.data.slice(startInd ?? 0, props.data.length),
+                                    },
+                                ],
+                                primaryAxis,
+                                secondaryAxes,
+                            }}
+                        />
+                    </div>
+                </>
+            ) : (
+                <div className="h-64 flex-auto">
                     <StyledIcon component={TracerLoading} className="tracer-loading" />
-                )}
-            </div>
+                </div>
+            )}
         </Card>
     );
 }

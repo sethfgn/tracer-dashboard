@@ -27,7 +27,7 @@ export default (() => {
     async function getLineData() {
         const tvlSeries = await fetchTvlSeries();
         const newTvlData = tvlSeries[Object.keys(tvlSeries)[0]];
-        setTvlData(newTvlData.splice(0, 100));
+        setTvlData(newTvlData.splice(10, 1500));
     }
 
     React.useEffect(() => {
@@ -73,19 +73,17 @@ export default (() => {
             </div>
             {/* Mini dashboards */}
             <div className="flex mt-12 mb-10 flex-col lg:flex-row">
-                {['Total Value Locked', 'Total National Locked', 'All Time Value']
-                    .map((e) => (
-                        <div key={e} className="box lg:w-1/3">
-                            <ChartCard title={e} data={tvlData} />
-                        </div>
-                    ))
-                    .reduce((prev, curr) => (
-                        <>
-                            {prev}
-                            <div className="m-2" />
-                            {curr}
-                        </>
-                    ))}
+                <div className="box lg:w-1/3">
+                    <ChartCard title="Total Value Locked" data={tvlData} />
+                </div>
+                <div className="m-2" />
+                <div className="box lg:w-1/3">
+                    <ChartCard title="Total National Locked" data={tvlData} transform={(num) => num * 3} />
+                </div>
+                <div className="m-2" />
+                <div className="box lg:w-1/3">
+                    <ChartCard title="All Time Value" data={tvlData} />
+                </div>
             </div>
             {/* Big dashboard */}
             <Card padding="sm">
