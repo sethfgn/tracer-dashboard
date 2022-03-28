@@ -10,6 +10,7 @@ import ChartCard from '../../components/ChartCard/index';
 import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
 import styled from 'styled-components';
 import Icon from '@ant-design/icons';
+import BigChartCard from '@components/BigChartCard';
 
 const StyledIcon = styled(Icon)`
     position: absolute;
@@ -86,55 +87,7 @@ export default (() => {
                 </div>
             </div>
             {/* Big dashboard */}
-            <Card padding="sm">
-                <div className="flex">
-                    <div className="pb-2 font-semibold">Cumulative Volume Changes</div>
-                </div>
-
-                <div className="flex">
-                    <div className=" flex-initial flex-col">
-                        <GreyContainer>
-                            <div className="font-bold text-3xl">$400,000</div>
-                            <div className="flex items-center">
-                                <div className="w-2 h-2 rounded-full bg-red-400 mr-1" />
-                                <div className="font-bold text-base opacity-50">Total Mint</div>
-                            </div>
-                        </GreyContainer>
-                        <GreyContainer>
-                            <div className="font-bold text-3xl">$360,000</div>
-                            <div className="flex items-center">
-                                <div className="w-2 h-2 rounded-full bg-blue-400 mr-1" />
-                                <div className="font-bold text-base opacity-50">Total Burn</div>
-                            </div>
-                        </GreyContainer>
-                        <GreyContainer>
-                            <div className="font-bold text-3xl">$40,000</div>
-                            <div className="flex items-center">
-                                <div className="w-2 h-2 rounded-full bg-green-400 mr-1" />
-                                <div className="font-bold text-base opacity-50">Total Secondary Liquidity</div>
-                            </div>
-                        </GreyContainer>
-                    </div>
-                    <div className="flex-auto ml-5">
-                        {tvlData ? (
-                            <Chart
-                                options={{
-                                    data: [
-                                        {
-                                            label: 'TVL',
-                                            data: tvlData,
-                                        },
-                                    ],
-                                    primaryAxis,
-                                    secondaryAxes,
-                                }}
-                            />
-                        ) : (
-                            <StyledIcon component={TracerLoading} className="tracer-loading" />
-                        )}
-                    </div>
-                </div>
-            </Card>
+            <BigChartCard title="Hello World" data={tvlData}/>
             <div className="mb-20" />
         </div>
     );
