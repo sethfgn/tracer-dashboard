@@ -11,6 +11,8 @@ type Interval = 'Short' | 'Long';
 type Leverage = '1' | '3';
 type Chain = 'BTC' | 'ETH' | 'SOL';
 
+export type Series = 'tvl' | 'mint' | 'burn' | 'secondary-liquidity';
+
 export type PoolType = `${Interval} ${Leverage}x${Chain}`;
 
 // type Series = 'tvl' | 'mint' | 'burn' | 'secondary-liquidity';

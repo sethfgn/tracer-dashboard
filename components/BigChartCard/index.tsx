@@ -2,7 +2,7 @@ import React from 'react';
 import { Dropdown } from '@components/General/Dropdown';
 import { Card } from '@tracer-protocol/tracer-ui';
 import { LogoTicker } from '../General/Logo/index';
-import { TvlDataPoint } from '@libs/utils/poolsApi';
+import { Series, TvlDataPoint } from '@libs/utils/poolsApi';
 import { AxisOptions } from 'react-charts/types/types';
 import { Chart } from 'react-charts';
 import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
@@ -46,10 +46,9 @@ const timeIntervalDict: Record<TimeFrame, number> = {
 const BigChartCard = (props: ChartCardProps) => {
     const [currency, setCurrency] = React.useState<LogoTicker>('USDC');
     const [timeFrame, setTimeFrame] = React.useState<TimeFrame>('Monthly');
+    const [series, setSeries] = React.useState<Series>('mint');
 
     const [startInd, setStartInd] = React.useState<number>();
-
-    // HELLO!!!!
 
     const transform = React.useMemo(
         () => (props.transform ? (num: number) => props.transform!(num) : (num: number) => num),
@@ -139,27 +138,37 @@ const BigChartCard = (props: ChartCardProps) => {
             </div>
             <div className="flex">
                 <div className=" flex-initial flex-col">
-                    <GreyContainer>
-                        <div className="font-bold text-3xl">$400,000</div>
-                        <div className="flex items-center">
-                            <div className="w-2 h-2 rounded-full bg-red-400 mr-1" />
-                            <div className="font-bold text-base opacity-50">Total Mint</div>
+                    <div
+                        style={
+                            series === 'mint'
+                                ? {
+                                      boxShadow: '-4px -3px 45px 21px rgba(0,0,0,0.35);',
+                                  }
+                                : {}
+                        }
+                    >
+                        <div className="mt-5 px-5 pt-5 pb-5 rounded-xl bg-cool-gray-100 dark:bg-theme-background-secondary">
+                            <div className="font-bold text-3xl">$400,000</div>
+                            <div className="flex items-center">
+                                <div className="w-2 h-2 rounded-full bg-red-400 mr-1" />
+                                <div className="font-bold text-base opacity-50">Total Mint</div>
+                            </div>
                         </div>
-                    </GreyContainer>
-                    <GreyContainer>
+                    </div>
+                    <div className="mt-5 px-5 pt-5 pb-5 rounded-xl bg-cool-gray-100 dark:bg-theme-background-secondary">
                         <div className="font-bold text-3xl">$360,000</div>
                         <div className="flex items-center">
                             <div className="w-2 h-2 rounded-full bg-blue-400 mr-1" />
                             <div className="font-bold text-base opacity-50">Total Burn</div>
                         </div>
-                    </GreyContainer>
-                    <GreyContainer>
+                    </div>
+                    <div className="mt-5 px-5 pt-5 pb-5 rounded-xl bg-cool-gray-100 dark:bg-theme-background-secondary">
                         <div className="font-bold text-3xl">$40,000</div>
                         <div className="flex items-center">
                             <div className="w-2 h-2 rounded-full bg-green-400 mr-1" />
                             <div className="font-bold text-base opacity-50">Total Secondary Liquidity</div>
                         </div>
-                    </GreyContainer>
+                    </div>
                 </div>
                 {props.data ? (
                     <div className="flex-auto ml-5">
