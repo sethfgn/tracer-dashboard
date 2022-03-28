@@ -49,6 +49,8 @@ const BigChartCard = (props: ChartCardProps) => {
 
     const [startInd, setStartInd] = React.useState<number>();
 
+    // HELLO!!!!
+
     const transform = React.useMemo(
         () => (props.transform ? (num: number) => props.transform!(num) : (num: number) => num),
         [props.transform],
