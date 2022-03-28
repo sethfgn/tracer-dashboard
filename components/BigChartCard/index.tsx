@@ -8,7 +8,7 @@ import { Chart } from 'react-charts';
 import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
 import styled from 'styled-components';
 import Icon from '@ant-design/icons';
-import GreyContainer from '@components/GreyContainer';
+//import GreyContainer from '@components/GreyContainer';
 import Button from '@components/General/Button';
 
 const currencyOptions: LogoTicker[] = ['USDC', 'EUR'];
@@ -49,6 +49,7 @@ const BigChartCard = (props: ChartCardProps) => {
     const [series, setSeries] = React.useState<Series>('mint');
 
     const [startInd, setStartInd] = React.useState<number>();
+
 
     const transform = React.useMemo(
         () => (props.transform ? (num: number) => props.transform!(num) : (num: number) => num),
@@ -139,10 +140,12 @@ const BigChartCard = (props: ChartCardProps) => {
             <div className="flex">
                 <div className=" flex-initial flex-col">
                     <div
+                        className="rounded-xl"
+                        onClick ={() => setSeries('mint')}
                         style={
                             series === 'mint'
                                 ? {
-                                      boxShadow: '-4px -3px 45px 21px rgba(0,0,0,0.35);',
+                                      boxShadow: '0px 0px 20px green',
                                   }
                                 : {}
                         }
@@ -155,18 +158,42 @@ const BigChartCard = (props: ChartCardProps) => {
                             </div>
                         </div>
                     </div>
-                    <div className="mt-5 px-5 pt-5 pb-5 rounded-xl bg-cool-gray-100 dark:bg-theme-background-secondary">
-                        <div className="font-bold text-3xl">$360,000</div>
-                        <div className="flex items-center">
-                            <div className="w-2 h-2 rounded-full bg-blue-400 mr-1" />
-                            <div className="font-bold text-base opacity-50">Total Burn</div>
+                    <div
+                        className="rounded-xl"
+                        onClick ={() => setSeries('burn')}
+                        style={
+                            series === 'burn'
+                                ? {
+                                      boxShadow: '0px 0px 20px green',
+                                  }
+                                : {}
+                        }
+                    >
+                        <div className="mt-5 px-5 pt-5 pb-5 rounded-xl bg-cool-gray-100 dark:bg-theme-background-secondary">
+                            <div className="font-bold text-3xl">$360,000</div>
+                            <div className="flex items-center">
+                                <div className="w-2 h-2 rounded-full bg-blue-400 mr-1" />
+                                <div className="font-bold text-base opacity-50">Total Burn</div>
+                            </div>
                         </div>
                     </div>
-                    <div className="mt-5 px-5 pt-5 pb-5 rounded-xl bg-cool-gray-100 dark:bg-theme-background-secondary">
-                        <div className="font-bold text-3xl">$40,000</div>
-                        <div className="flex items-center">
-                            <div className="w-2 h-2 rounded-full bg-green-400 mr-1" />
-                            <div className="font-bold text-base opacity-50">Total Secondary Liquidity</div>
+                    <div
+                        className="rounded-xl"
+                        onClick ={() => setSeries('secondary-liquidity')}
+                        style={
+                            series === 'secondary-liquidity'
+                                ? {
+                                      boxShadow: '0px 0px 20px green',
+                                  }
+                                : {}
+                        }
+                    >
+                        <div className="mt-5 px-5 pt-5 pb-5 rounded-xl bg-cool-gray-100 dark:bg-theme-background-secondary">
+                            <div className="font-bold text-3xl">$40,000</div>
+                            <div className="flex items-center">
+                                <div className="w-2 h-2 rounded-full bg-green-400 mr-1" />
+                                <div className="font-bold text-base opacity-50">Total Secondary Liquidity</div>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -1,26 +1,26 @@
 import React from 'react';
-import GreyContainer from '@components/GreyContainer';
+//import GreyContainer from '@components/GreyContainer';
 // import PriceLineChart from '@components/Charts/PriceLineChart/index';
-import { fetchPoolSeries, TvlDataPoint, PoolSeries, PoolType } from '../../libs/utils/poolsApi';
+import { fetchPoolSeries, TvlDataPoint, PoolType } from '../../libs/utils/poolsApi';
 // import ChartWrapper from '@components/Charts';
-import { AxisOptions, Chart } from 'react-charts';
-import { Button, Card } from '@tracer-protocol/tracer-ui';
+//import { AxisOptions, Chart } from 'react-charts';
+import { Button } from '@tracer-protocol/tracer-ui';
 //import { Dropdown } from '@components/General/Dropdown';
 import ChartCard from '../../components/ChartCard/index';
-import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
-import styled from 'styled-components';
-import Icon from '@ant-design/icons';
+//import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
+//import styled from 'styled-components';
+//import Icon from '@ant-design/icons';
 import BigChartCard from '@components/BigChartCard';
 
-const StyledIcon = styled(Icon)`
-    position: absolute;
-    margin: auto;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 32px;
-    height: 32px;
-`;
+// const StyledIcon = styled(Icon)`
+//     position: absolute;
+//     margin: auto;
+//     left: 50%;
+//     top: 50%;
+//     transform: translate(-50%, -50%);
+//     width: 32px;
+//     height: 32px;
+// `;
 
 export default (() => {
     const [tvlData, setTvlData] = React.useState<TvlDataPoint[]>();
@@ -39,25 +39,6 @@ export default (() => {
     React.useEffect(() => {
         getLineData();
     }, []);
-
-    const primaryAxis = React.useMemo(
-        (): AxisOptions<TvlDataPoint> => ({
-            getValue: (datum) => new Date(Number(datum.time_stamp)),
-            scaleType: 'time',
-            padBandRange: false,
-        }),
-        [],
-    );
-
-    const secondaryAxes = React.useMemo(
-        (): AxisOptions<TvlDataPoint>[] => [
-            {
-                getValue: (datum) => datum.tvl,
-                elementType: 'line',
-            },
-        ],
-        [],
-    );
 
     return (
         <div className="container">
