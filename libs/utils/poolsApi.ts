@@ -11,10 +11,12 @@ type Interval = 'Short' | 'Long';
 type Leverage = '1' | '3';
 type Chain = 'BTC' | 'ETH' | 'SOL';
 
+export type PoolType = `${Interval} ${Leverage}x${Chain}`;
+
 // type Series = 'tvl' | 'mint' | 'burn' | 'secondary-liquidity';
 
 export type PoolSeries = {
-    [pool in `${Interval} ${Leverage}x${Chain}`]: {
+    [pool in PoolType]: {
         tvl: {
             time_stamp: string; // unix timestamp (seconds)
             tvl: number;

@@ -1,7 +1,7 @@
 import React from 'react';
 import GreyContainer from '@components/GreyContainer';
 // import PriceLineChart from '@components/Charts/PriceLineChart/index';
-import { fetchPoolSeries, TvlDataPoint, PoolSeries } from '../../libs/utils/poolsApi';
+import { fetchPoolSeries, TvlDataPoint, PoolSeries, PoolType } from '../../libs/utils/poolsApi';
 // import ChartWrapper from '@components/Charts';
 import { AxisOptions, Chart } from 'react-charts';
 import { Button, Card } from '@tracer-protocol/tracer-ui';
@@ -24,10 +24,15 @@ const StyledIcon = styled(Icon)`
 
 export default (() => {
     const [tvlData, setTvlData] = React.useState<TvlDataPoint[]>();
+    const [pool, setPool] = React.useState<PoolType>();
 
     async function getLineData() {
         const poolSeries = await fetchPoolSeries();
-        const newTvlData = poolSeries['Short 3xBTC'].tvl;
+
+        const defaultPool = Object.keys(poolSeries)[0] as PoolType;
+        setPool(defaultPool);
+
+        const newTvlData = poolSeries[defaultPool].tvl;
         setTvlData(newTvlData);
     }
 
@@ -63,7 +68,7 @@ export default (() => {
                 </div>
                 <div className="mr-5">
                     <Button size="medium" variant="action">
-                        Short 3xBTC
+                        {pool}
                     </Button>
                 </div>
                 <div>
