@@ -7,6 +7,21 @@ export type TvlDataPoint = {
     tvl: number;
 };
 
+export type MintDataPoint = {
+    time_stamp: string; // unix timestamp (seconds)
+    mint: number;
+};
+
+export type BurnDataPoint = {
+    time_stamp: string; // unix timestamp (seconds)
+    burn: number;
+};
+
+export type SecondaryLiquidityDataPoint = {
+    time_stamp: string; // unix timestamp (seconds)
+    'secondary-liquidity': number;
+};
+
 type Interval = 'Short' | 'Long';
 type Leverage = '1' | '3';
 type Chain = 'BTC' | 'ETH' | 'SOL';
