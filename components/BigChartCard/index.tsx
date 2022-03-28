@@ -2,7 +2,7 @@ import React from 'react';
 import { Dropdown } from '@components/General/Dropdown';
 import { Card } from '@tracer-protocol/tracer-ui';
 import { LogoTicker } from '../General/Logo/index';
-import { Series, TvlDataPoint } from '@libs/utils/poolsApi';
+import { Series, TvlDataPoint, MintDataPoint, BurnDataPoint, SecondaryLiquidityDataPoint, PoolSeries } from '@libs/utils/poolsApi';
 import { AxisOptions } from 'react-charts/types/types';
 import { Chart } from 'react-charts';
 import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
@@ -19,7 +19,7 @@ const timeFrameOptions: TimeFrame[] = ['Hourly', 'Daily', 'Weekly', 'Monthly', '
 
 interface ChartCardProps {
     title: string;
-    data?: TvlDataPoint[];
+    poolData: PoolSeries['Long 1xBTC'];
     transform?: (arg: number) => number;
 }
 
@@ -57,15 +57,15 @@ const BigChartCard = (props: ChartCardProps) => {
     );
 
     React.useEffect(() => {
-        if (props.data) {
+        if (props.poolData) {
             if (timeFrame === 'All') {
                 setStartInd(0);
             } else {
                 const startUnixTime =
-                    Number(props.data[props!.data!.length - 1].time_stamp) - timeIntervalDict[timeFrame];
+                    Number(props.poolData[series][props!.poolData[series]!.length - 1].time_stamp) - timeIntervalDict[timeFrame];
                 let ind = 0;
 
-                while (Number(props.data[ind].time_stamp) < startUnixTime) {
+                while (Number(props.poolData[series][ind].time_stamp) < startUnixTime) {
                     ind++;
                 }
 
@@ -73,10 +73,10 @@ const BigChartCard = (props: ChartCardProps) => {
                 setStartInd(ind);
             }
         }
-    }, [props.data, timeFrame]);
+    }, [props.poolData, timeFrame, series]);
 
     const primaryAxis = React.useMemo(
-        (): AxisOptions<TvlDataPoint> => ({
+        (): AxisOptions<any> => ({
             getValue: (datum) => new Date(Number(datum.time_stamp)),
             // scaleType: 'time',
             padBandRange: false,
@@ -84,19 +84,19 @@ const BigChartCard = (props: ChartCardProps) => {
             styles: { width: '50%' },
             shouldNice: false,
         }),
-        [],
+        [series],
     );
 
     const secondaryAxes = React.useMemo(
-        (): AxisOptions<TvlDataPoint>[] => [
+        (): AxisOptions<any>[] => [
             {
-                getValue: (datum) => transform(datum.tvl),
+                getValue: (datum) => transform(datum[series] as number),
                 elementType: 'area',
                 show: false,
                 shouldNice: false,
             },
         ],
-        [],
+        [series],
     );
 
     return (
@@ -197,14 +197,14 @@ const BigChartCard = (props: ChartCardProps) => {
                         </div>
                     </div>
                 </div>
-                {props.data ? (
+                {props.poolData?.[series] ? (
                     <div className="flex-auto ml-5">
                         <Chart
                             options={{
                                 data: [
                                     {
                                         label: props.title,
-                                        data: props.data?.slice(startInd ?? 0, props.data.length),
+                                        data: props.poolData[series]?.slice(startInd ?? 0, props.poolData[series].length),
                                     },
                                 ],
                                 primaryAxis,
