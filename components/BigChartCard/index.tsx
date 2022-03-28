@@ -9,6 +9,7 @@ import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
 import styled from 'styled-components';
 import Icon from '@ant-design/icons';
 import GreyContainer from '@components/GreyContainer';
+import Button from '@components/General/Button';
 
 const currencyOptions: LogoTicker[] = ['USDC', 'EUR'];
 
@@ -56,7 +57,6 @@ const timeIntervalDict: Record<TimeFrame, number> = {
 const BigChartCard = (props: ChartCardProps) => {
     const [currency, setCurrency] = React.useState<LogoTicker>('USDC');
     const [timeFrame, setTimeFrame] = React.useState<TimeFrame>('Monthly');
-    const [graph, setGraph] = React.useState<'mint' | 'burn' | 'secondary-liquidity'>('mint');
 
     const [startInd, setStartInd] = React.useState<number>();
 
@@ -113,40 +113,62 @@ const BigChartCard = (props: ChartCardProps) => {
             <div className="flex">
                 <div className="pb-2 font-semibold">Cumulative Volume Changes</div>
             </div>
-
+            <div className="flex justify-end items-center">
+                <div className="mr-2">
+                    <Button size="sm" variant="primary">
+                        View Balancer Stat
+                    </Button>
+                </div>
+                <div className="w-28">
+                    <Dropdown
+                        size="xs"
+                        placeHolder={currency}
+                        placeHolderIcon={currency}
+                        options={currencyOptions.map((c) => ({
+                            key: c,
+                            text: c,
+                            ticker: c,
+                        }))}
+                        onSelect={(option) => setCurrency(option as LogoTicker)}
+                        value={currency}
+                    />
+                </div>
+                <div className="w-24">
+                    <Dropdown
+                        size="xs"
+                        placeHolder={timeFrame}
+                        options={timeFrameOptions.map((c) => ({
+                            key: c,
+                            text: c,
+                        }))}
+                        onSelect={(option) => setTimeFrame(option as TimeFrame)}
+                        value={timeFrame}
+                    />
+                </div>
+            </div>
             <div className="flex">
                 <div className=" flex-initial flex-col">
-                    <div
-                        style={
-                            graph === 'mint'
-                                ? {
-                                      boxShadow: '-4px -3px 45px 21px rgba(0,0,0,0.35);',
-                                  }
-                                : {}
-                        }
-                    >
-                        <div className="mt-5 px-5 pt-5 pb-5 rounded-xl bg-cool-gray-100 dark:bg-theme-background-secondary">
-                            <div className="font-bold text-3xl">$400,000</div>
-                            <div className="flex items-center">
-                                <div className="w-2 h-2 rounded-full bg-red-400 mr-1" />
-                                <div className="font-bold text-base opacity-50">Total Mint</div>
-                            </div>
+                    <GreyContainer>
+                        <div className="font-bold text-3xl">$400,000</div>
+                        <div className="flex items-center">
+                            <div className="w-2 h-2 rounded-full bg-red-400 mr-1" />
+                            <div className="font-bold text-base opacity-50">Total Mint</div>
                         </div>
-                    </div>
-                    <div className="mt-5 px-5 pt-5 pb-5 rounded-xl bg-cool-gray-100 dark:bg-theme-background-secondary">
+                    </GreyContainer>
+                    <GreyContainer>
                         <div className="font-bold text-3xl">$360,000</div>
                         <div className="flex items-center">
                             <div className="w-2 h-2 rounded-full bg-blue-400 mr-1" />
                             <div className="font-bold text-base opacity-50">Total Burn</div>
                         </div>
-                    </div>
-                    <div className="mt-5 px-5 pt-5 pb-5 rounded-xl bg-cool-gray-100 dark:bg-theme-background-secondary">
+                    </GreyContainer>
+                    <GreyContainer>
                         <div className="font-bold text-3xl">$40,000</div>
                         <div className="flex items-center">
                             <div className="w-2 h-2 rounded-full bg-green-400 mr-1" />
                             <div className="font-bold text-base opacity-50">Total Secondary Liquidity</div>
                         </div>
-                    </div>
+                    </GreyContainer>
                 </div>
                 {props.data ? (
                     <div className="flex-auto ml-5">
