@@ -1,7 +1,7 @@
 import React from 'react';
 import GreyContainer from '@components/GreyContainer';
 // import PriceLineChart from '@components/Charts/PriceLineChart/index';
-import { fetchTvlSeries, TvlDataPoint } from '../../libs/utils/totalValueLockedAPI';
+import { fetchPoolSeries, TvlDataPoint, PoolSeries } from '../../libs/utils/poolsApi';
 // import ChartWrapper from '@components/Charts';
 import { AxisOptions, Chart } from 'react-charts';
 import { Button, Card } from '@tracer-protocol/tracer-ui';
@@ -26,9 +26,9 @@ export default (() => {
     const [tvlData, setTvlData] = React.useState<TvlDataPoint[]>();
 
     async function getLineData() {
-        const tvlSeries = await fetchTvlSeries();
-        const newTvlData = tvlSeries[Object.keys(tvlSeries)[0]];
-        setTvlData(newTvlData.splice(10, 1500));
+        const poolSeries = await fetchPoolSeries();
+        const newTvlData = poolSeries['Short 3xBTC'].tvl;
+        setTvlData(newTvlData);
     }
 
     React.useEffect(() => {
@@ -87,7 +87,7 @@ export default (() => {
                 </div>
             </div>
             {/* Big dashboard */}
-            <BigChartCard title="Hello World" data={tvlData}/>
+            <BigChartCard title="Hello World" data={tvlData} />
             <div className="mb-20" />
         </div>
     );

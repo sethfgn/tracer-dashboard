@@ -20,7 +20,7 @@ for (const i of interval) {
             const marketKey = `${i} ${l}x${c}`;
             data[marketKey] = {};
             for (const s of series) {
-                data[marketKey][s] = rawData.slice(0, 1000).map((p) => ({
+                data[marketKey][s] = rawData.slice(10, 1010).map((p) => ({
                     time_stamp: p.time_stamp,
                     [s]: p.tvl,
                 }));
