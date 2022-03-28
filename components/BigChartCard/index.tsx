@@ -57,6 +57,7 @@ const timeIntervalDict: Record<TimeFrame, number> = {
 const BigChartCard = (props: ChartCardProps) => {
     const [currency, setCurrency] = React.useState<LogoTicker>('USDC');
     const [timeFrame, setTimeFrame] = React.useState<TimeFrame>('Monthly');
+    const [graph, setGraph] = React.useState<'mint' | 'burn' | 'secondary-liquidity'>('mint');
 
     const [startInd, setStartInd] = React.useState<number>();
 
