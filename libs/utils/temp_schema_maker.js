@@ -27,13 +27,11 @@ for (const i of interval) {
                     }));
                 } else {
                     data[marketKey][s] = [];
-                    let datum = rawData[10].tvl;
                     for (let i = 0; i < 1000; i++) {
                         data[marketKey][s][i] = {
                             time_stamp: rawData[i + 10].time_stamp,
-                            [s]: datum,
+                            [s]: Math.random() * 1e3,
                         };
-                        datum += ((Math.random() > 0.5 ? 1 : -1) * Math.random()) / 5;
                     }
                 }
             }
