@@ -20,10 +20,22 @@ for (const i of interval) {
             const marketKey = `${i} ${l}x${c}`;
             data[marketKey] = {};
             for (const s of series) {
-                data[marketKey][s] = rawData.slice(10, 1010).map((p) => ({
-                    time_stamp: p.time_stamp,
-                    [s]: p.tvl,
-                }));
+                if (s === 'tvl') {
+                    data[marketKey][s] = rawData.slice(10, 1010).map((p) => ({
+                        time_stamp: p.time_stamp,
+                        [s]: p.tvl,
+                    }));
+                } else {
+                    data[marketKey][s] = [];
+                    let datum = rawData[10].tvl;
+                    for (let i = 0; i < 1000; i++) {
+                        data[marketKey][s][i] = {
+                            time_stamp: rawData[i + 10].time_stamp,
+                            [s]: datum,
+                        };
+                        datum += ((Math.random() > 0.5 ? 1 : -1) * Math.random()) / 5;
+                    }
+                }
             }
         }
     }
