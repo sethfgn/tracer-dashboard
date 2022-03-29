@@ -109,51 +109,52 @@ const BigChartCard = (props: ChartCardProps) => {
 
     return (
         <Card padding="sm">
-            <div className="flex">
-                <div className="pb-2 font-semibold">Cumulative Volume Changes</div>
+            <div className="flex flex-row justify-between items-center">
+                <div className="pb-2 font-semibold">{props.title}</div>
+                <div className="flex justify-end items-center">
+                    <div className="mr-2">
+                        <Button size="xs" variant="primary">
+                            <div style={{ padding: 4 }}>View Balancer Stat</div>
+                        </Button>
+                    </div>
+                    <div className="w-28">
+                        <Dropdown
+                            size="xs"
+                            placeHolder={currency}
+                            placeHolderIcon={currency}
+                            options={currencyOptions.map((c) => ({
+                                key: c,
+                                text: c,
+                                ticker: c,
+                            }))}
+                            onSelect={(option) => setCurrency(option as LogoTicker)}
+                            value={currency}
+                        />
+                    </div>
+                    <div className="w-24">
+                        <Dropdown
+                            size="xs"
+                            placeHolder={timeFrame}
+                            options={timeFrameOptions.map((c) => ({
+                                key: c,
+                                text: c,
+                            }))}
+                            onSelect={(option) => setTimeFrame(option as TimeFrame)}
+                            value={timeFrame}
+                        />
+                    </div>
+                </div>
             </div>
-            <div className="flex justify-end items-center">
-                <div className="mr-2">
-                    <Button size="sm" variant="primary">
-                        View Balancer Stat
-                    </Button>
-                </div>
-                <div className="w-28">
-                    <Dropdown
-                        size="xs"
-                        placeHolder={currency}
-                        placeHolderIcon={currency}
-                        options={currencyOptions.map((c) => ({
-                            key: c,
-                            text: c,
-                            ticker: c,
-                        }))}
-                        onSelect={(option) => setCurrency(option as LogoTicker)}
-                        value={currency}
-                    />
-                </div>
-                <div className="w-24">
-                    <Dropdown
-                        size="xs"
-                        placeHolder={timeFrame}
-                        options={timeFrameOptions.map((c) => ({
-                            key: c,
-                            text: c,
-                        }))}
-                        onSelect={(option) => setTimeFrame(option as TimeFrame)}
-                        value={timeFrame}
-                    />
-                </div>
-            </div>
+
             <div className="flex">
                 <div className=" flex-initial flex-col">
                     <div
-                        className="rounded-xl"
+                        className="rounded-xl cursor-pointer"
                         onClick={() => setSeries('mint')}
                         style={
                             series === 'mint'
                                 ? {
-                                      boxShadow: '0px 0px 20px green',
+                                      boxShadow: '0px 0px 5px red',
                                   }
                                 : {}
                         }
@@ -171,12 +172,12 @@ const BigChartCard = (props: ChartCardProps) => {
                         </div>
                     </div>
                     <div
-                        className="rounded-xl"
+                        className="rounded-xl cursor-pointer"
                         onClick={() => setSeries('burn')}
                         style={
                             series === 'burn'
                                 ? {
-                                      boxShadow: '0px 0px 20px green',
+                                      boxShadow: '0px 0px 5px blue',
                                   }
                                 : {}
                         }
@@ -194,12 +195,12 @@ const BigChartCard = (props: ChartCardProps) => {
                         </div>
                     </div>
                     <div
-                        className="rounded-xl"
+                        className="rounded-xl cursor-pointer"
                         onClick={() => setSeries('secondary-liquidity')}
                         style={
                             series === 'secondary-liquidity'
                                 ? {
-                                      boxShadow: '0px 0px 20px green',
+                                      boxShadow: '0px 0px 5px green',
                                   }
                                 : {}
                         }
