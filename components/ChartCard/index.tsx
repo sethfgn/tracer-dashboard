@@ -31,12 +31,12 @@ const StyledIcon = styled(Icon)`
     height: 32px;
 `;
 
-const usdFormatter = new Intl.NumberFormat('en-US', {
+export const usdFormatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
 });
 
-const percentFormatter = Intl.NumberFormat('default', {
+export const percentFormatter = Intl.NumberFormat('default', {
     style: 'percent',
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
