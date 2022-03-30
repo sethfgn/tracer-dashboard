@@ -243,6 +243,9 @@ const BigChartCard = (props: ChartCardProps) => {
                                 ],
                                 primaryAxis,
                                 secondaryAxes,
+                                defaultColors: [
+                                    series === 'secondary-liquidity' ? 'green' : series === 'mint' ? '#f00' : 'blue',
+                                ],
                             }}
                         />
                     </div>
