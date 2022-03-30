@@ -161,9 +161,11 @@ const BigChartCard = (props: ChartCardProps) => {
                     >
                         <div className="mt-5 px-5 pt-5 pb-5 rounded-xl bg-cool-gray-100 dark:bg-theme-background-secondary">
                             <div className="font-bold text-3xl">
-                                {usdFormatter.format(
-                                    transform(props.poolData.mint[props.poolData.mint?.length - 1]?.mint),
-                                )}
+                                {props.poolData
+                                    ? usdFormatter.format(
+                                          transform(props.poolData.mint[props.poolData.mint?.length - 1]?.mint),
+                                      )
+                                    : '$-.--'}
                             </div>
                             <div className="flex items-center">
                                 <div className="w-2 h-2 rounded-full bg-red-400 mr-1" />
@@ -184,9 +186,11 @@ const BigChartCard = (props: ChartCardProps) => {
                     >
                         <div className="mt-5 px-5 pt-5 pb-5 rounded-xl bg-cool-gray-100 dark:bg-theme-background-secondary">
                             <div className="font-bold text-3xl">
-                                {usdFormatter.format(
-                                    transform(props.poolData.burn[props.poolData.mint?.length - 1]?.burn),
-                                )}
+                                {props.poolData
+                                    ? usdFormatter.format(
+                                          transform(props.poolData.burn[props.poolData.mint?.length - 1]?.burn),
+                                      )
+                                    : '$-.--'}
                             </div>
                             <div className="flex items-center">
                                 <div className="w-2 h-2 rounded-full bg-blue-400 mr-1" />
@@ -207,13 +211,15 @@ const BigChartCard = (props: ChartCardProps) => {
                     >
                         <div className="mt-5 px-5 pt-5 pb-5 rounded-xl bg-cool-gray-100 dark:bg-theme-background-secondary">
                             <div className="font-bold text-3xl">
-                                {usdFormatter.format(
-                                    transform(
-                                        props.poolData['secondary-liquidity'][props.poolData.mint?.length - 1]?.[
-                                            'secondary-liquidity'
-                                        ],
-                                    ),
-                                )}
+                                {props.poolData
+                                    ? usdFormatter.format(
+                                          transform(
+                                              props.poolData['secondary-liquidity'][
+                                                  props.poolData['secondary-liquidity'].length - 1
+                                              ]?.['secondary-liquidity'],
+                                          ),
+                                      )
+                                    : '$-.--'}
                             </div>
                             <div className="flex items-center">
                                 <div className="w-2 h-2 rounded-full bg-green-400 mr-1" />
