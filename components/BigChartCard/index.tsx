@@ -11,12 +11,9 @@ import Icon from '@ant-design/icons';
 //import GreyContainer from '@components/GreyContainer';
 import Button from '@components/General/Button';
 import { usdFormatter } from '@components/ChartCard';
+import TimeIntervalButton, { TimeFrame, timeFrameOptions } from '@components/TimeIntervalButtons';
 
 const currencyOptions: LogoTicker[] = ['USDC', 'EUR'];
-
-type TimeFrame = 'Hourly' | 'Daily' | 'Weekly' | 'Monthly' | '3 Months' | 'Yearly' | 'All';
-
-const timeFrameOptions: TimeFrame[] = ['Hourly', 'Daily', 'Weekly', 'Monthly', '3 Months', 'Yearly', 'All'];
 
 interface ChartCardProps {
     title: string;
@@ -122,18 +119,6 @@ const BigChartCard = (props: ChartCardProps) => {
                             }))}
                             onSelect={(option) => setCurrency(option as LogoTicker)}
                             value={currency}
-                        />
-                    </div>
-                    <div className="w-24">
-                        <Dropdown
-                            size="xs"
-                            placeHolder={timeFrame}
-                            options={timeFrameOptions.map((c) => ({
-                                key: c,
-                                text: c,
-                            }))}
-                            onSelect={(option) => setTimeFrame(option as TimeFrame)}
-                            value={timeFrame}
                         />
                     </div>
                 </div>
@@ -245,6 +230,19 @@ const BigChartCard = (props: ChartCardProps) => {
                 ) : (
                     <StyledIcon component={TracerLoading} className="tracer-loading" />
                 )}
+            </div>
+            <div className="flex flex-row justify-end items-center">
+                <div className="flex justify-end items-center">
+                    <div className="mr-2">
+                        <div>
+                            <TimeIntervalButton
+                                options={timeFrameOptions}
+                                onSelect={setTimeFrame}
+                                default="Monthly"
+                            ></TimeIntervalButton>
+                        </div>
+                    </div>
+                </div>
             </div>
         </Card>
     );

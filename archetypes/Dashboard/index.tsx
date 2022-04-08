@@ -71,7 +71,7 @@ export default (() => {
                 </div>
                 <div className="m-2" />
                 <div className="box lg:w-1/3">
-                    <ChartCard title="All Time Value" data={poolSeries?.[pool].tvl} />
+                    <ChartCard title="All Time Volume" data={poolSeries?.[pool].tvl} />
                 </div>
             </div>
             {/* Big dashboard */}
