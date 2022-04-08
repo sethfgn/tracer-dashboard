@@ -2,7 +2,7 @@ import React from 'react';
 import { Dropdown } from '@components/General/Dropdown';
 import { Card } from '@tracer-protocol/tracer-ui';
 import { LogoTicker } from '../General/Logo/index';
-import { TvlDataPoint } from '@libs/utils/poolsApi';
+import { PoolSeries } from '@libs/utils/poolsApi';
 import { AxisOptions } from 'react-charts/types/types';
 import { Chart } from 'react-charts';
 import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
@@ -17,7 +17,7 @@ const timeFrameOptions: TimeFrame[] = ['Hourly', 'Daily', 'Weekly', 'Monthly', '
 
 interface ChartCardProps {
     title: string;
-    data?: TvlDataPoint[];
+    data?: PoolSeries['Long 1xBTC']['tvl'];
     transform?: (arg: number) => number;
 }
 
@@ -83,7 +83,7 @@ export default function ChartCard(props: ChartCardProps) {
     }, [props.data, timeFrame]);
 
     const primaryAxis = React.useMemo(
-        (): AxisOptions<TvlDataPoint> => ({
+        (): AxisOptions<PoolSeries['Long 1xBTC']['tvl'][0]> => ({
             getValue: (datum) => new Date(Number(datum.time_stamp)),
             // scaleType: 'time',
             padBandRange: false,
@@ -95,7 +95,7 @@ export default function ChartCard(props: ChartCardProps) {
     );
 
     const secondaryAxes = React.useMemo(
-        (): AxisOptions<TvlDataPoint>[] => [
+        (): AxisOptions<PoolSeries['Long 1xBTC']['tvl'][0]>[] => [
             {
                 getValue: (datum) => transform(datum.tvl),
                 elementType: 'area',

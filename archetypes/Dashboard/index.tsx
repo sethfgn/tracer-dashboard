@@ -1,15 +1,7 @@
 import React from 'react';
 //import GreyContainer from '@components/GreyContainer';
 // import PriceLineChart from '@components/Charts/PriceLineChart/index';
-import {
-    fetchPoolSeries,
-    TvlDataPoint,
-    MintDataPoint,
-    BurnDataPoint,
-    SecondaryLiquidityDataPoint,
-    PoolType,
-    PoolSeries,
-} from '../../libs/utils/poolsApi';
+import { fetchPoolSeries, PoolType, PoolSeries } from '../../libs/utils/poolsApi';
 // import ChartWrapper from '@components/Charts';
 //import { AxisOptions, Chart } from 'react-charts';
 import { Button } from '@tracer-protocol/tracer-ui';
