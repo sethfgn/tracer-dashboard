@@ -30,25 +30,12 @@ export type Series = 'tvl' | 'mint' | 'burn' | 'secondary-liquidity';
 
 export type PoolType = `${Interval} ${Leverage}x${Chain}`;
 
-// type Series = 'tvl' | 'mint' | 'burn' | 'secondary-liquidity';
-
 export type PoolSeries = {
     [pool in PoolType]: {
-        tvl: {
+        [s in Series]: {
+            [key in s]: number;
+        } & {
             time_stamp: string; // unix timestamp (seconds)
-            tvl: number;
-        }[];
-        mint: {
-            time_stamp: string; // unix timestamp (seconds)
-            mint: number;
-        }[];
-        burn: {
-            time_stamp: string; // unix timestamp (seconds)
-            burn: number;
-        }[];
-        'secondary-liquidity': {
-            time_stamp: string; // unix timestamp (seconds)
-            'secondary-liquidity': number;
         }[];
     };
 };
@@ -60,6 +47,3 @@ export const fetchPoolSeries: () => Promise<PoolSeries> = async () => {
         .then((res) => res.json())
         .catch(() => dummy_data);
 };
-
-// @ts-ignore
-const bruh: PoolSeries = {};

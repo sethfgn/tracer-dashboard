@@ -32,7 +32,7 @@ import BigChartCard from '@components/BigChartCard';
 
 export default (() => {
     const [poolSeries, setPoolSeries] = React.useState<PoolSeries>();
-    const [pool, setPool] = React.useState<PoolType>("Short 1xBTC");
+    const [pool, setPool] = React.useState<PoolType>('Short 1xBTC');
 
     async function getLineData() {
         const newPoolSeries = await fetchPoolSeries();
@@ -71,7 +71,11 @@ export default (() => {
                 </div>
                 <div className="m-2" />
                 <div className="box lg:w-1/3">
-                    <ChartCard title="Total National Locked" data={poolSeries?.[pool].tvl} transform={(num) => num * 3} />
+                    <ChartCard
+                        title="Total National Locked"
+                        data={poolSeries?.[pool].tvl}
+                        transform={(num) => num * 3}
+                    />
                 </div>
                 <div className="m-2" />
                 <div className="box lg:w-1/3">
