@@ -2,7 +2,6 @@ import React from 'react';
 import { Dropdown } from '@components/General/Dropdown';
 import { Card } from '@tracer-protocol/tracer-ui';
 import { LogoTicker } from '../General/Logo/index';
-import { PoolSeries } from '@libs/utils/poolsApi';
 import { AxisOptions } from 'react-charts/types/types';
 import { Chart } from 'react-charts';
 import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';

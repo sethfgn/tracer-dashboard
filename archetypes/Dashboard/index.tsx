@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-    PoolSeries,
-    fetchTradeHistory,
-    TradeHistoryEntry,
-    TradeHistoryMap,
-    fetchTvl,
-    TvlEntry,
-} from '../../libs/utils/poolsApi';
+import { fetchTradeHistory, TradeHistoryMap, fetchTvl, TvlEntry } from '../../libs/utils/poolsApi';
 import { Button, Dropdown } from '@tracer-protocol/tracer-ui';
 import ChartCard from '../../components/ChartCard/index';
 import BigChartCard from '@components/BigChartCard';
