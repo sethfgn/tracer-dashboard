@@ -1,29 +1,10 @@
-import * as dummy_data from './example_tracer_data.json';
 import axios from 'axios';
 import { request, gql } from 'graphql-request';
 
-const BASE_TVL_API = process.env.NEXT_PUBLIC_BASE_TVL_API;
 const requestURL = 'https://api.tracer.finance/poolsv2/';
 const networkId = '42161';
 
-type Interval = 'Short' | 'Long';
-type Leverage = '1' | '3';
-type Chain = 'BTC' | 'ETH' | 'SOL';
-
 export type Series = 'tvl' | 'mint' | 'burn' | 'secondary-liquidity';
-
-export type PoolType = `${Interval} ${Leverage}x${Chain}`;
-
-export type PoolSeries = {
-    [pool in PoolType]: {
-        [s in Series]: {
-            [key in s]: number;
-        }[] &
-            {
-                time_stamp: string; // unix timestamp (seconds)
-            }[];
-    };
-};
 
 export interface TradeHistoryEntryRaw {
     date: number;
@@ -70,14 +51,6 @@ export interface TvlEntry {
     timestamp: number;
     volume: number;
 }
-
-export const fetchPoolSeries: () => Promise<PoolSeries> = async () => {
-    const route = `${BASE_TVL_API}/unknown/path`;
-
-    return await fetch(route)
-        .then((res) => res.json())
-        .catch(() => dummy_data);
-};
 
 export async function fetchTradeHistory({
     poolAddress = '',
