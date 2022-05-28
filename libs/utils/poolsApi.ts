@@ -1,6 +1,6 @@
 import * as dummy_data from './example_tracer_data.json';
 import axios from 'axios';
-import { TradeHistory } from './tradeHistoryAPI';
+import { request, gql } from 'graphql-request';
 
 const BASE_TVL_API = process.env.NEXT_PUBLIC_BASE_TVL_API;
 const requestURL = 'https://api.tracer.finance/poolsv2/';
@@ -52,12 +52,9 @@ export interface TradeHistoryEntryRaw {
     tokenOutAmount: string;
 }
 
-export interface TradeHistoryEntry {
-    address: string;
-    timestamp: number;
+export interface TradeHistoryEntry extends TvlEntry {
     pool: string;
     type: Series;
-    volume: number;
 }
 
 export type TradeHistorySeriesMap = {
@@ -67,6 +64,12 @@ export type TradeHistorySeriesMap = {
 export type TradeHistoryMap = {
     [x: string]: TradeHistorySeriesMap;
 };
+
+export interface TvlEntry {
+    address: string;
+    timestamp: number;
+    volume: number;
+}
 
 export const fetchPoolSeries: () => Promise<PoolSeries> = async () => {
     const route = `${BASE_TVL_API}/unknown/path`;
@@ -129,4 +132,65 @@ function formatTrades(trades: TradeHistoryEntryRaw[]) {
         }
     }
     return tradeHistoryMap;
+}
+
+async function getUpKeeps(skip: number) {
+    const query = gql`
+      query {
+        upkeeps(
+            first: 1000
+            skip: ${skip}
+        ) {
+            pool {
+                longToken
+                shortToken
+            }
+            timestamp
+            longBalance
+            shortBalance
+            }
+      }`;
+    const response = await request(
+        'https://api.thegraph.com/subgraphs/name/tracer-protocol/perpetual-pools-v2-arbitrum-one',
+        query,
+    );
+    return response.upkeeps;
+}
+
+function formatUpKeeps(tvl: any) {
+    const l = tvl.map((t) => {
+        return {
+            address: t.pool.longToken,
+            volume: Number(t.longBalance) / 1e6,
+            timestamp: Number(t.timestamp),
+        };
+    });
+    let s = tvl.map((t) => {
+        return {
+            address: t.pool.shortToken,
+            volume: Number(t.shortBalance) / 1e6,
+            timestamp: Number(t.timestamp),
+        };
+    });
+    return l.concat(s);
+}
+
+async function getAllUpKeeps(): Promise<TvlEntry[]> {
+    let tvl: any = [];
+    let complete = false;
+    let skip = 0;
+    while (!complete) {
+        const t = await getUpKeeps(skip);
+        tvl = tvl.concat(t);
+        if (t.length < 1000) {
+            complete = true;
+        } else {
+            skip += 1000;
+        }
+    }
+    return formatUpKeeps(tvl);
+}
+
+export async function fetchTvl() {
+    return await getAllUpKeeps();
 }

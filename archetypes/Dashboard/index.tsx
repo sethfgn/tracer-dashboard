@@ -1,5 +1,12 @@
 import React from 'react';
-import { PoolSeries, fetchTradeHistory, TradeHistoryEntry, TradeHistoryMap } from '../../libs/utils/poolsApi';
+import {
+    PoolSeries,
+    fetchTradeHistory,
+    TradeHistoryEntry,
+    TradeHistoryMap,
+    fetchTvl,
+    TvlEntry,
+} from '../../libs/utils/poolsApi';
 import { Button, Dropdown } from '@tracer-protocol/tracer-ui';
 import ChartCard from '../../components/ChartCard/index';
 import BigChartCard from '@components/BigChartCard';
@@ -16,6 +23,7 @@ import BigChartCard from '@components/BigChartCard';
 
 export default (() => {
     const [tradeHistory, setTradeHistory] = React.useState<TradeHistoryMap>();
+    const [tvl, setTvl] = React.useState<TvlEntry[]>();
 
     const [pool, setPool] = React.useState<string>('3L-ETH/USD+USDC');
     const [poolOptions, setPoolOptions] = React.useState<string[]>([]);
@@ -29,8 +37,15 @@ export default (() => {
         setPoolOptions(poolOptionsList);
     }
 
+    async function getTvlData() {
+        fetchTvl()
+            .then((c) => c.sort((x, y) => x.timestamp - y.timestamp))
+            .then(setTvl);
+    }
+
     React.useEffect(() => {
         getLineData();
+        getTvlData();
     }, []);
 
     return (
@@ -53,19 +68,19 @@ export default (() => {
                 </div>
             </div>
             {/* Mini dashboards */}
-            {/* <div className="flex mt-12 mb-10 flex-col lg:flex-row">
+            <div className="flex mt-12 mb-10 flex-col lg:flex-row">
                 <div className="box lg:w-1/3">
-                    <ChartCard title="Total Value Locked" data={poolSeries?.[pool].tvl} />
+                    <ChartCard title="Total Value Locked" data={tvl} />
                 </div>
                 <div className="m-2" />
                 <div className="box lg:w-1/3">
-                    <ChartCard title="Total National Locked" data={tradeHistory?.[pool?].} transform={(num) => num * 3} />
+                    <ChartCard title="Total National Locked" data={tvl} transform={(num) => num * 3} />
                 </div>
                 <div className="m-2" />
                 <div className="box lg:w-1/3">
-                    <ChartCard title="All Time Volume" data={poolSeries?.[pool].tvl} />
+                    <ChartCard title="All Time Volume" data={tvl} />
                 </div>
-            </div> */}
+            </div>
             {/* Big dashboard */}
             <BigChartCard title="Cumulative Volume Changes" poolData={tradeHistory?.[pool]} />
             <div className="mb-20" />

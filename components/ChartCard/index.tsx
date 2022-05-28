@@ -8,6 +8,7 @@ import { Chart } from 'react-charts';
 import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
 import styled from 'styled-components';
 import Icon from '@ant-design/icons';
+import { TvlEntry } from '../../libs/utils/poolsApi';
 
 const currencyOptions: LogoTicker[] = ['USDC', 'EUR'];
 
@@ -17,7 +18,7 @@ const timeFrameOptions: TimeFrame[] = ['Hourly', 'Daily', 'Weekly', 'Monthly', '
 
 interface ChartCardProps {
     title: string;
-    data?: PoolSeries['Long 1xBTC']['tvl'];
+    data?: TvlEntry[];
     transform?: (arg: number) => number;
 }
 
@@ -69,10 +70,10 @@ export default function ChartCard(props: ChartCardProps) {
                 setStartInd(0);
             } else {
                 const startUnixTime =
-                    Number(props.data[props!.data!.length - 1].time_stamp) - timeIntervalDict[timeFrame];
+                    Number(props.data[props!.data!.length - 1].timestamp) - timeIntervalDict[timeFrame];
                 let ind = 0;
 
-                while (Number(props.data[ind].time_stamp) < startUnixTime) {
+                while (props.data[ind].timestamp < startUnixTime) {
                     ind++;
                 }
 
@@ -83,8 +84,8 @@ export default function ChartCard(props: ChartCardProps) {
     }, [props.data, timeFrame]);
 
     const primaryAxis = React.useMemo(
-        (): AxisOptions<PoolSeries['Long 1xBTC']['tvl'][0]> => ({
-            getValue: (datum) => new Date(Number(datum.time_stamp)),
+        (): AxisOptions<TvlEntry> => ({
+            getValue: (datum) => new Date(Number(datum.timestamp)),
             // scaleType: 'time',
             padBandRange: false,
             show: false,
@@ -95,9 +96,9 @@ export default function ChartCard(props: ChartCardProps) {
     );
 
     const secondaryAxes = React.useMemo(
-        (): AxisOptions<PoolSeries['Long 1xBTC']['tvl'][0]>[] => [
+        (): AxisOptions<TvlEntry>[] => [
             {
-                getValue: (datum) => transform(datum.tvl),
+                getValue: (datum) => transform(datum.volume),
                 elementType: 'area',
                 show: false,
                 shouldNice: false,
@@ -143,26 +144,26 @@ export default function ChartCard(props: ChartCardProps) {
                 <>
                     <div className="mt-3 mb-3 flex flex-row justify-between">
                         <div className="font-bold text-3xl">
-                            {usdFormatter.format(transform(props.data?.[props.data?.length - 1]?.tvl))}
+                            {usdFormatter.format(transform(props.data?.[props.data?.length - 1]?.volume))}
                         </div>
                         <div
                             className={`font-bold text-3xl ${
-                                (transform(props.data[props.data?.length - 1]?.tvl) -
-                                    transform(props.data[startInd ?? 0]?.tvl)) /
-                                    transform(props.data[startInd ?? 0]?.tvl) >=
+                                (transform(props.data[props.data?.length - 1]?.volume) -
+                                    transform(props.data[startInd ?? 0]?.volume)) /
+                                    transform(props.data[startInd ?? 0]?.volume) >=
                                 0
                                     ? 'text-green-600'
                                     : 'text-red-600'
                             }`}
                         >
                             {percentFormatter.format(
-                                (transform(props.data[props.data?.length - 1]?.tvl) -
-                                    transform(props.data[startInd ?? 0]?.tvl)) /
-                                    transform(props.data[startInd ?? 0]?.tvl),
+                                (transform(props.data[props.data?.length - 1]?.volume) -
+                                    transform(props.data[startInd ?? 0]?.volume)) /
+                                    transform(props.data[startInd ?? 0]?.volume),
                             )}{' '}
-                            {(transform(props.data[props.data?.length - 1]?.tvl) -
-                                transform(props.data[startInd ?? 0]?.tvl)) /
-                                transform(props.data[startInd ?? 0]?.tvl) >=
+                            {(transform(props.data[props.data?.length - 1]?.volume) -
+                                transform(props.data[startInd ?? 0]?.volume)) /
+                                transform(props.data[startInd ?? 0]?.volume) >=
                             0
                                 ? '↑'
                                 : '↓'}
