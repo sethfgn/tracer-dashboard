@@ -2,7 +2,7 @@ import React from 'react';
 import { Dropdown } from '@components/General/Dropdown';
 import { Card } from '@tracer-protocol/tracer-ui';
 import { LogoTicker } from '../General/Logo/index';
-import { Series, PoolSeries } from '@libs/utils/poolsApi';
+import { Series, TradeHistorySeriesMap } from '@libs/utils/poolsApi';
 import { AxisOptions } from 'react-charts/types/types';
 import { Chart } from 'react-charts';
 import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
@@ -17,7 +17,7 @@ const currencyOptions: LogoTicker[] = ['USDC', 'EUR'];
 
 interface ChartCardProps {
     title: string;
-    poolData: PoolSeries['Long 1xBTC'];
+    poolData?: TradeHistorySeriesMap;
     transform?: (arg: number) => number;
 }
 
@@ -59,11 +59,10 @@ const BigChartCard = (props: ChartCardProps) => {
                 setStartInd(0);
             } else {
                 const startUnixTime =
-                    Number(props.poolData[series][props!.poolData[series]!.length - 1].time_stamp) -
-                    timeIntervalDict[timeFrame];
+                    props.poolData[series][props!.poolData[series]!.length - 1].timestamp - timeIntervalDict[timeFrame];
                 let ind = 0;
 
-                while (Number(props.poolData[series][ind].time_stamp) < startUnixTime) {
+                while (props.poolData[series][ind].timestamp < startUnixTime) {
                     ind++;
                 }
 
@@ -75,7 +74,7 @@ const BigChartCard = (props: ChartCardProps) => {
 
     const primaryAxis = React.useMemo(
         (): AxisOptions<any> => ({
-            getValue: (datum) => new Date(Number(datum.time_stamp)),
+            getValue: (datum) => new Date(datum.timestamp),
             // scaleType: 'time',
             padBandRange: false,
             show: false,
@@ -88,7 +87,7 @@ const BigChartCard = (props: ChartCardProps) => {
     const secondaryAxes = React.useMemo(
         (): AxisOptions<any>[] => [
             {
-                getValue: (datum) => transform(datum[series] as number),
+                getValue: (datum) => transform(datum.volume),
                 elementType: 'area',
                 show: false,
                 shouldNice: false,
@@ -141,7 +140,7 @@ const BigChartCard = (props: ChartCardProps) => {
                             <div className="font-bold text-3xl">
                                 {props.poolData
                                     ? usdFormatter.format(
-                                          transform(props.poolData.mint[props.poolData.mint?.length - 1]?.mint),
+                                          transform(props.poolData.mint[props.poolData.mint?.length - 1]?.volume),
                                       )
                                     : '$-.--'}
                             </div>
@@ -166,7 +165,7 @@ const BigChartCard = (props: ChartCardProps) => {
                             <div className="font-bold text-3xl">
                                 {props.poolData
                                     ? usdFormatter.format(
-                                          transform(props.poolData.burn[props.poolData.mint?.length - 1]?.burn),
+                                          transform(props.poolData.burn[props.poolData.burn?.length - 1]?.volume),
                                       )
                                     : '$-.--'}
                             </div>
@@ -176,7 +175,7 @@ const BigChartCard = (props: ChartCardProps) => {
                             </div>
                         </div>
                     </div>
-                    <div
+                    {/* <div
                         className="rounded-xl cursor-pointer"
                         onClick={() => setSeries('secondary-liquidity')}
                         style={
@@ -194,7 +193,7 @@ const BigChartCard = (props: ChartCardProps) => {
                                           transform(
                                               props.poolData['secondary-liquidity'][
                                                   props.poolData['secondary-liquidity'].length - 1
-                                              ]?.['secondary-liquidity'],
+                                              ]?.volume,
                                           ),
                                       )
                                     : '$-.--'}
@@ -204,7 +203,7 @@ const BigChartCard = (props: ChartCardProps) => {
                                 <div className="font-bold text-base opacity-50">Total Secondary Liquidity</div>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
                 {props.poolData?.[series] ? (
                     <div className="flex-auto ml-5">
@@ -213,10 +212,7 @@ const BigChartCard = (props: ChartCardProps) => {
                                 data: [
                                     {
                                         label: props.title,
-                                        data: props.poolData[series]?.slice(
-                                            startInd ?? 0,
-                                            props.poolData[series].length,
-                                        ),
+                                        data: props.poolData?.[series],
                                     },
                                 ],
                                 primaryAxis,
