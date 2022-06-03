@@ -238,3 +238,8 @@ export async function getAllSecondaryLiquiditySwaps(addresses: string[]): Promis
     }
     return formatSwaps(swaps);
 }
+
+// TODO
+export function getEuroToUsd() {
+    return 1.5;
+}

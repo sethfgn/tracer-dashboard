@@ -7,7 +7,7 @@ import { Chart } from 'react-charts';
 import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
 import styled from 'styled-components';
 import Icon from '@ant-design/icons';
-import { TvlEntry } from '../../libs/utils/poolsApi';
+import { TvlEntry, getEuroToUsd } from '../../libs/utils/poolsApi';
 
 const currencyOptions: LogoTicker[] = ['USDC', 'EUR'];
 
@@ -18,7 +18,7 @@ const timeFrameOptions: TimeFrame[] = ['Hourly', 'Daily', 'Weekly', 'Monthly', '
 interface ChartCardProps {
     title: string;
     data?: TvlEntry[];
-    transform?: (arg: number) => number;
+    transform?: number;
 }
 
 const StyledIcon = styled(Icon)`
@@ -59,8 +59,8 @@ export default function ChartCard(props: ChartCardProps) {
     const [startInd, setStartInd] = React.useState<number>();
 
     const transform = React.useMemo(
-        () => (props.transform ? (num: number) => props.transform!(num) : (num: number) => num),
-        [props.transform],
+        () => (num: number) => num * (props.transform ?? 1) * (currency === 'EUR' ? getEuroToUsd() : 1),
+        [props.transform, currency],
     );
 
     React.useEffect(() => {

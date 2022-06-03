@@ -90,7 +90,7 @@ export default (() => {
                 </div>
                 <div className="m-2" />
                 <div className="box lg:w-1/3">
-                    <ChartCard title="Total National Locked" data={tvl} transform={(num) => num * 3} />
+                    <ChartCard title="Total National Locked" data={tvl} transform={3} />
                 </div>
                 <div className="m-2" />
                 <div className="box lg:w-1/3">
