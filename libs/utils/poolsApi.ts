@@ -64,7 +64,9 @@ export async function fetchTradeHistory({
         requestURL +
             `tradeHistory?network=${networkId}&poolAddress=${poolAddress}&page=${page}&pageSize=${pageSize}&sort=${sort}&sortDirection=${sortDirection}&types=${types}`,
     );
-    return formatTrades(resp.data.rows);
+    const map = formatTrades(resp.data.rows);
+
+    return map;
 }
 
 function parseMint(trade: TradeHistoryEntryRaw): TradeHistoryEntry {
@@ -87,9 +89,13 @@ function parseBurn(trade: TradeHistoryEntryRaw): TradeHistoryEntry {
     };
 }
 
-function formatTrades(trades: TradeHistoryEntryRaw[]) {
+function formatTrades(trades: TradeHistoryEntryRaw[]): [TradeHistoryMap, Map<string, string>] {
     const tradeHistoryMap: TradeHistoryMap = {};
+    const tokenOutMap: Map<string, string> = new Map();
+
     for (const trade of trades) {
+        tokenOutMap.set(trade.tokenOutSymbol, trade.tokenOutAddress);
+
         const type = trade.type;
         if (type.includes('Burn')) {
             if (!tradeHistoryMap[trade.tokenInSymbol]) {
@@ -104,7 +110,8 @@ function formatTrades(trades: TradeHistoryEntryRaw[]) {
             tradeHistoryMap[trade.tokenOutSymbol].mint.push(parseMint(trade));
         }
     }
-    return tradeHistoryMap;
+
+    return [tradeHistoryMap, tokenOutMap];
 }
 
 async function getUpKeeps(skip: number) {
@@ -131,14 +138,14 @@ async function getUpKeeps(skip: number) {
 }
 
 function formatUpKeeps(tvl: any) {
-    const l = tvl.map((t) => {
+    const l = tvl.map((t: any) => {
         return {
             address: t.pool.longToken,
             volume: Number(t.longBalance) / 1e6,
             timestamp: Number(t.timestamp),
         };
     });
-    let s = tvl.map((t) => {
+    const s = tvl.map((t: any) => {
         return {
             address: t.pool.shortToken,
             volume: Number(t.shortBalance) / 1e6,
@@ -166,4 +173,55 @@ async function getAllUpKeeps(): Promise<TvlEntry[]> {
 
 export async function fetchTvl() {
     return await getAllUpKeeps();
+}
+
+// Update token${ direction } from poolList api instead of hardcoding
+async function getSwaps(direction: string, skip: number, addresses: string[]) {
+    const query = gql`
+      query {
+        swaps(
+          first: 1000
+          skip: ${skip}
+          where: { 
+            token${direction}_in: [
+                ${addresses.map((a) => `"${a}"`)}
+              ] 
+          }
+        ) 
+        {
+          token${direction}
+          tokenAmount${direction === 'In' ? 'Out' : 'In'}
+          timestamp
+        }
+      }`;
+    const response = await request('https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-arbitrum-v2', query);
+    return response.swaps;
+}
+
+function formatSwaps(swaps: any[]) {
+    return swaps.map((s) => {
+        return {
+            address: s.tokenIn ? s.tokenIn : s.tokenOut,
+            volume: s.tokenAmountIn ? Number(s.tokenAmountIn) : Number(s.tokenAmountOut),
+            timestamp: s.timestamp,
+        };
+    });
+}
+
+export async function getAllSecondaryLiquiditySwaps(addresses: string[]): Promise<TvlEntry[]> {
+    let swaps: any[] = [];
+    for (const direction of ['In', 'Out']) {
+        let complete = false;
+        let skip = 0;
+        while (!complete) {
+            const s = await getSwaps(direction, skip, addresses);
+            swaps = swaps.concat(s);
+            if (s.length < 1000 || skip >= 5000) {
+                complete = true;
+            } else {
+                skip += 1000;
+            }
+        }
+    }
+    return formatSwaps(swaps);
 }

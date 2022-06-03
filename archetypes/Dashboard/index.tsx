@@ -1,5 +1,11 @@
 import React from 'react';
-import { fetchTradeHistory, TradeHistoryMap, fetchTvl, TvlEntry } from '../../libs/utils/poolsApi';
+import {
+    fetchTradeHistory,
+    TradeHistoryMap,
+    fetchTvl,
+    TvlEntry,
+    getAllSecondaryLiquiditySwaps,
+} from '../../libs/utils/poolsApi';
 import { Button, Dropdown } from '@tracer-protocol/tracer-ui';
 import ChartCard from '../../components/ChartCard/index';
 import BigChartCard from '@components/BigChartCard';
@@ -17,17 +23,23 @@ import BigChartCard from '@components/BigChartCard';
 export default (() => {
     const [tradeHistory, setTradeHistory] = React.useState<TradeHistoryMap>();
     const [tvl, setTvl] = React.useState<TvlEntry[]>();
+    const [secondaryLiquidity, setSecondaryLiquidity] = React.useState<TvlEntry[]>();
 
     const [pool, setPool] = React.useState<string>('3L-ETH/USD+USDC');
     const [poolOptions, setPoolOptions] = React.useState<string[]>([]);
 
     async function getLineData() {
-        const tradeHistoryTemp = await fetchTradeHistory();
+        const [tradeHistoryTemp, addresses] = await fetchTradeHistory();
         setTradeHistory(tradeHistoryTemp);
+        console.log('tradeHistoryTemp', tradeHistoryTemp);
 
         const poolOptionsList = Object.keys(tradeHistoryTemp);
         setPool(poolOptionsList[0]);
         setPoolOptions(poolOptionsList);
+
+        const secondaryLiquidityTemp = await getAllSecondaryLiquiditySwaps(addresses);
+        console.log('secondaryLiquidityTemp', secondaryLiquidityTemp);
+        setSecondaryLiquidity(secondaryLiquidityTemp);
     }
 
     async function getTvlData() {
