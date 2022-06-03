@@ -23,13 +23,12 @@ import BigChartCard from '@components/BigChartCard';
 export default (() => {
     const [tradeHistory, setTradeHistory] = React.useState<TradeHistoryMap>();
     const [tvl, setTvl] = React.useState<TvlEntry[]>();
-    const [secondaryLiquidity, setSecondaryLiquidity] = React.useState<TvlEntry[]>();
 
     const [pool, setPool] = React.useState<string>('3L-ETH/USD+USDC');
     const [poolOptions, setPoolOptions] = React.useState<string[]>([]);
 
     async function getLineData() {
-        const [tradeHistoryTemp, addresses] = await fetchTradeHistory();
+        const tradeHistoryTemp = await fetchTradeHistory();
         setTradeHistory(tradeHistoryTemp);
         console.log('tradeHistoryTemp', tradeHistoryTemp);
 
@@ -37,9 +36,21 @@ export default (() => {
         setPool(poolOptionsList[0]);
         setPoolOptions(poolOptionsList);
 
-        const secondaryLiquidityTemp = await getAllSecondaryLiquiditySwaps(addresses);
-        console.log('secondaryLiquidityTemp', secondaryLiquidityTemp);
-        setSecondaryLiquidity(secondaryLiquidityTemp);
+        const secondaryLiquidity = await getAllSecondaryLiquiditySwaps(
+            poolOptionsList.map((p) => tradeHistoryTemp[p].address),
+        );
+
+        secondaryLiquidity.forEach((sl) => {
+            poolOptionsList.forEach((p) => {
+                if (sl.address.toLowerCase() === tradeHistoryTemp[p].address.toLowerCase()) {
+                    tradeHistoryTemp[p]['secondary-liquidity'].push({ ...sl, type: 'secondary-liquidity', pool: p });
+                }
+            });
+        });
+
+        poolOptionsList.forEach((p) => {
+            tradeHistoryTemp[p]['secondary-liquidity'].sort((x, y) => x.timestamp - y.timestamp);
+        });
     }
 
     async function getTvlData() {

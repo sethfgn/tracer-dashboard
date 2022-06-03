@@ -175,7 +175,7 @@ const BigChartCard = (props: ChartCardProps) => {
                             </div>
                         </div>
                     </div>
-                    {/* <div
+                    <div
                         className="rounded-xl cursor-pointer"
                         onClick={() => setSeries('secondary-liquidity')}
                         style={
@@ -203,7 +203,7 @@ const BigChartCard = (props: ChartCardProps) => {
                                 <div className="font-bold text-base opacity-50">Total Secondary Liquidity</div>
                             </div>
                         </div>
-                    </div> */}
+                    </div>
                 </div>
                 {props.poolData?.[series] ? (
                     <div className="flex-auto ml-5">

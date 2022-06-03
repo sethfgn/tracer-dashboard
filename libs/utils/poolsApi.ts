@@ -40,6 +40,8 @@ export interface TradeHistoryEntry extends TvlEntry {
 
 export type TradeHistorySeriesMap = {
     [type in Series]: TradeHistoryEntry[];
+} & {
+    address: string;
 };
 
 export type TradeHistoryMap = {
@@ -64,9 +66,9 @@ export async function fetchTradeHistory({
         requestURL +
             `tradeHistory?network=${networkId}&poolAddress=${poolAddress}&page=${page}&pageSize=${pageSize}&sort=${sort}&sortDirection=${sortDirection}&types=${types}`,
     );
-    const map = formatTrades(resp.data.rows);
+    const tradeHistory = formatTrades(resp.data.rows);
 
-    return map;
+    return tradeHistory;
 }
 
 function parseMint(trade: TradeHistoryEntryRaw): TradeHistoryEntry {
@@ -89,29 +91,40 @@ function parseBurn(trade: TradeHistoryEntryRaw): TradeHistoryEntry {
     };
 }
 
-function formatTrades(trades: TradeHistoryEntryRaw[]): [TradeHistoryMap, Map<string, string>] {
+function formatTrades(trades: TradeHistoryEntryRaw[]): TradeHistoryMap {
     const tradeHistoryMap: TradeHistoryMap = {};
-    const tokenOutMap: Map<string, string> = new Map();
 
     for (const trade of trades) {
-        tokenOutMap.set(trade.tokenOutSymbol, trade.tokenOutAddress);
-
         const type = trade.type;
         if (type.includes('Burn')) {
             if (!tradeHistoryMap[trade.tokenInSymbol]) {
-                tradeHistoryMap[trade.tokenInSymbol] = { mint: [], burn: [], 'secondary-liquidity': [], tvl: [] };
+                tradeHistoryMap[trade.tokenInSymbol] = {
+                    mint: [],
+                    burn: [],
+                    'secondary-liquidity': [],
+                    tvl: [],
+                    address: '',
+                };
             }
+            tradeHistoryMap[trade.tokenInSymbol].address = trade.tokenInAddress;
             tradeHistoryMap[trade.tokenInSymbol].burn.push(parseBurn(trade));
         }
         if (type.includes('Mint')) {
             if (!tradeHistoryMap[trade.tokenOutSymbol]) {
-                tradeHistoryMap[trade.tokenOutSymbol] = { mint: [], burn: [], 'secondary-liquidity': [], tvl: [] };
+                tradeHistoryMap[trade.tokenOutSymbol] = {
+                    mint: [],
+                    burn: [],
+                    'secondary-liquidity': [],
+                    tvl: [],
+                    address: '',
+                };
             }
+            tradeHistoryMap[trade.tokenOutSymbol].address = trade.tokenOutAddress;
             tradeHistoryMap[trade.tokenOutSymbol].mint.push(parseMint(trade));
         }
     }
 
-    return [tradeHistoryMap, tokenOutMap];
+    return tradeHistoryMap;
 }
 
 async function getUpKeeps(skip: number) {
